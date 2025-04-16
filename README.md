@@ -1,8 +1,8 @@
 # [Full Stack Open Course 2025](https://fullstackopen.com/en/)
 ## Deep Dive Into Modern Web Development
 
-[] Part 0 - Fundamentals of Web Apps <br>
-[] Part 1 - Introduction to React <br>
+[x] Part 0 - Fundamentals of Web Apps <br>
+[x] Part 1 - Introduction to React <br>
 [] Part 2 - Communicating with Server <br>
 [] Part 3 - Programming a server with NodeJs and Express <br>
 [] Part 4 - Testing Express servers, user administrations <br>
