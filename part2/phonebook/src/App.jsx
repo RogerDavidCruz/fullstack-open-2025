@@ -6,21 +6,21 @@ Exercise 2.11 - Phonebook Step 6
 https://fullstackopen.com/en/part2/getting_data_from_server#exercise-2-11
 */
 
-import { useState } from 'react'
-import Filter from './components/Filter'
-import PersonForm from './components/PersonForm'
-import Persons from './components/Persons'
+import { useState, useEffect } from 'react'
+import Filter from './components/Filter.jsx'
+import PersonForm from './components/PersonForm.jsx'
+import Persons from './components/Persons.jsx'
+import personService from './services/persons.js'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+
+  useEffect(() => {
+    personService.getAll().then(data => setPersons(data))
+  }, [])
 
   const handleNameChange = (e) => setNewName(e.target.value)
   const handleNumberChange = (e) => setNewNumber(e.target.value)
@@ -28,18 +28,50 @@ const App = () => {
 
   const addPerson = (e) => {
     e.preventDefault()
-    if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-      return
+    const existingPerson = persons.find(p => p.name === newName)
+
+    if (existingPerson) {
+      if (window.confirm(`${newName} is already added to the phonebook. Replace the number?`)) {
+        const updatedPerson = { ...existingPerson, number: newNumber }
+
+        personService
+          .update(existingPerson.id, updatedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(p => p.id !== existingPerson.id ? p : returnedPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(error => {
+            alert(`Information for ${newName} has already been removed from the server.`)
+            setPersons(persons.filter(p => p.id !== existingPerson.id))
+          })
+      }
+    } else {
+      const newPerson = { name: newName, number: newNumber }
+
+      personService
+        .create(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
     }
-    const newPerson = {
-      name: newName,
-      number: newNumber,
-      id: persons.length + 1
+  }
+
+  const deletePerson = (id) => {
+    const person = persons.find(p => p.id === id)
+    if (person && window.confirm(`Delete ${person.name}?`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== id))
+        })
+        .catch(error => {
+          alert(`Failed to delete ${person.name}. It may have already been removed.`)
+          setPersons(persons.filter(p => p.id !== id))
+        })
     }
-    setPersons(persons.concat(newPerson))
-    setNewName('')
-    setNewNumber('')
   }
 
   const personsToShow = persons.filter(person =>
@@ -49,6 +81,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
       <Filter value={filter} onChange={handleFilterChange} />
 
       <h3>Add a new</h3>
@@ -61,7 +94,7 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} onDelete={deletePerson} />
     </div>
   )
 }
