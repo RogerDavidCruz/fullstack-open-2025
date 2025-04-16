@@ -1,5 +1,5 @@
 /* 
-  Exercise 1.1 - 1.3: Course Information, steps 1 - 3
+  Exercise 1.1 - 1.4: Course Information, steps 1 - 4
   https://fullstackopen.com/en/part1/introduction_to_react#exercises-1-1-1-2
 */
 
