@@ -1,6 +1,9 @@
 /*
 Exercise 2.6 - 2.10 - Phonebook Steps 1-5
 https://fullstackopen.com/en/part2/forms#exercises-2-6-2-10
+
+Exercise 2.11 - Phonebook Step 6
+https://fullstackopen.com/en/part2/getting_data_from_server#exercise-2-11
 */
 
 import { useState } from 'react'
