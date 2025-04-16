@@ -13,7 +13,7 @@ const Header = (props) => {
 }
 
 /* 
-  Exercise 1.4: Course Information, step 4
+  Exercise 1.5: Course Information, step 5
   https://fullstackopen.com/en/part1/introduction_to_react#exercises-1-1-1-2
 */
 
