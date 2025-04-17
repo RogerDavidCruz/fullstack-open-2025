@@ -3,14 +3,10 @@ import axios from 'axios'
 
 const Country = ({ country }) => {
   const [weather, setWeather] = useState(null)
-  const api_key = import.meta.env.VITE_WEATHER_API_KEY
 
   useEffect(() => {
     const api_key = import.meta.env.VITE_WEATHER_API_KEY.trim()
     const capital = country.capital.trim()
-  
-    console.log('Capital:', country.capital)
-    console.log('API Key:', api_key)
 
     axios
       .get(`https://api.openweathermap.org/data/2.5/weather?q=${capital}&units=metric&appid=${api_key}`)
